@@ -112,26 +112,16 @@ export default async function NewTransactionPage() {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {incomeCategories.length > 0 && (
-                      <>
-                        <SelectItem value="" disabled>Income Categories</SelectItem>
-                        {incomeCategories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </>
-                    )}
-                    {expenseCategories.length > 0 && (
-                      <>
-                        <SelectItem value="" disabled>Expense Categories</SelectItem>
-                        {expenseCategories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </>
-                    )}
+                    {incomeCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name} (Income)
+                      </SelectItem>
+                    ))}
+                    {expenseCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name} (Expense)
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
