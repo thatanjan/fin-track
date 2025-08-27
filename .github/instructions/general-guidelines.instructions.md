@@ -27,3 +27,7 @@ applyTo: '**'
 
 - check `.github/instructions/folder-structure.instructions.md` for folder structure guidelines.
 
+- Always try to use server components wherever possible. Use client components only when necessary (e.g., for interactivity).
+
+- Don't create api endpoints for fetching data. Instead, use server actions to fetch data directly from the database.
+
