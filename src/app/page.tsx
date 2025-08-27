@@ -1,7 +1,7 @@
 import { getDashboardData } from '@/actions/transactions'
-import { signOut } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import SignOutButton from '@/features/auth/components/SignOutButton'
 import Link from 'next/link'
 
 function formatCurrency(amount: number) {
@@ -33,11 +33,7 @@ export default async function Home() {
               <Button asChild>
                 <Link href="/transactions/new">Add Transaction</Link>
               </Button>
-              <form action={signOut}>
-                <Button type="submit" variant="outline">
-                  Sign Out
-                </Button>
-              </form>
+              <SignOutButton />
             </div>
           </div>
         </div>

@@ -1,15 +1,6 @@
-import { createCategory } from '@/actions/management'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import NewCategoryForm from '@/features/categories/components/NewCategoryForm'
 import Link from 'next/link'
 
 export default function NewCategoryPage() {
@@ -39,62 +30,7 @@ export default function NewCategoryPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form action={createCategory} className="space-y-6">
-              {/* Category Name */}
-              <div className="space-y-2">
-                <Label htmlFor="name">Category Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="e.g., Groceries, Salary, Entertainment"
-                  required
-                />
-              </div>
-
-              {/* Category Type */}
-              <div className="space-y-2">
-                <Label htmlFor="type">Category Type</Label>
-                <Select name="type" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Color (Optional) */}
-              <div className="space-y-2">
-                <Label htmlFor="color">Color (Optional)</Label>
-                <div className="flex space-x-2">
-                  <Input
-                    id="color"
-                    name="color"
-                    type="color"
-                    className="w-20 h-10"
-                    defaultValue="#3b82f6"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500 mt-2">
-                      Choose a color to help identify this category
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex space-x-4">
-                <Button type="submit" className="flex-1">
-                  Add Category
-                </Button>
-                <Button type="button" variant="outline" asChild>
-                  <Link href="/">Cancel</Link>
-                </Button>
-              </div>
-            </form>
+            <NewCategoryForm />
           </CardContent>
         </Card>
 
