@@ -48,7 +48,7 @@ export default async function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -77,7 +77,7 @@ export default async function Home() {
               <div className="text-2xl font-bold text-green-600">
                 {formatCurrency(dashboardData.totalIncome)}
               </div>
-              <p className="text-xs text-muted-foreground">This period</p>
+              <p className="text-xs text-muted-foreground">Last 6 months</p>
             </CardContent>
           </Card>
 
@@ -92,20 +92,7 @@ export default async function Home() {
               <div className="text-2xl font-bold text-red-600">
                 {formatCurrency(dashboardData.totalExpenses)}
               </div>
-              <p className="text-xs text-muted-foreground">This period</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Liabilities</CardTitle>
-              <div className="h-4 w-4 text-muted-foreground">⚠️</div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-600">
-                {formatCurrency(dashboardData.totalLiabilities)}
-              </div>
-              <p className="text-xs text-muted-foreground">Outstanding debt</p>
+              <p className="text-xs text-muted-foreground">Last 6 months</p>
             </CardContent>
           </Card>
         </div>
@@ -189,12 +176,15 @@ export default async function Home() {
                       <div className="flex-1">
                         <h4 className="font-medium">{balance.name}</h4>
                         <p className="text-sm text-gray-500">
-                          Created {formatDate(balance.created_at)}
+                          Created{' '}
+                          {formatDate(
+                            balance.created_at || new Date().toISOString(),
+                          )}
                         </p>
                       </div>
                       <div className="text-right">
                         <span className="text-lg font-bold text-green-600">
-                          {formatCurrency(balance.balance)}
+                          {formatCurrency(balance.balance || 0)}
                         </span>
                       </div>
                     </div>
