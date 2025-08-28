@@ -3,7 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import type { InsertTransaction, TransactionWithDetails, DashboardSummary } from '@/types/database'
+import type {
+  InsertTransaction,
+  TransactionWithDetails,
+  DashboardSummary,
+} from '@/types/database'
 
 export async function getDashboardData(): Promise<DashboardSummary> {
   const supabase = await createClient()
@@ -19,11 +23,13 @@ export async function getDashboardData(): Promise<DashboardSummary> {
   // Get all transactions with details
   const { data: transactions } = await supabase
     .from('transactions')
-    .select(`
+    .select(
+      `
       *,
       balance:balances(*),
       category:categories(*)
-    `)
+    `,
+    )
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(10)
@@ -41,8 +47,10 @@ export async function getDashboardData(): Promise<DashboardSummary> {
     .eq('user_id', user.id)
 
   // Calculate totals
-  const totalBalance = balances?.reduce((sum, balance) => sum + balance.balance, 0) || 0
-  const totalLiabilities = liabilities?.reduce((sum, liability) => sum + liability.amount, 0) || 0
+  const totalBalance =
+    balances?.reduce((sum, balance) => sum + balance.balance, 0) || 0
+  const totalLiabilities =
+    liabilities?.reduce((sum, liability) => sum + liability.amount, 0) || 0
 
   // Calculate income and expenses from transactions
   const { data: incomeTransactions } = await supabase
@@ -57,8 +65,18 @@ export async function getDashboardData(): Promise<DashboardSummary> {
     .eq('user_id', user.id)
     .eq('type', 'expense')
 
-  const totalIncome = incomeTransactions?.reduce((sum, t) => sum + t.amount, 0) || 0
-  const totalExpenses = expenseTransactions?.reduce((sum, t) => sum + t.amount, 0) || 0
+  const totalIncome =
+    incomeTransactions?.reduce((sum, t) => sum + t.amount, 0) || 0
+  const totalExpenses =
+    expenseTransactions?.reduce((sum, t) => sum + t.amount, 0) || 0
+
+  // Get first 3 balances for dashboard display
+  const { data: firstThreeBalances } = await supabase
+    .from('balances')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(3)
 
   return {
     totalIncome,
@@ -66,6 +84,8 @@ export async function getDashboardData(): Promise<DashboardSummary> {
     totalBalance,
     totalLiabilities,
     recentTransactions: (transactions as TransactionWithDetails[]) || [],
+    balances: firstThreeBalances || [],
+    totalBalances: balances?.length || 0,
   }
 }
 
@@ -112,9 +132,8 @@ export async function createTransaction(formData: FormData) {
     .single()
 
   if (balance) {
-    const newBalance = type === 'income' 
-      ? balance.balance + amount 
-      : balance.balance - amount
+    const newBalance =
+      type === 'income' ? balance.balance + amount : balance.balance - amount
 
     await supabase
       .from('balances')

@@ -32,7 +32,6 @@ export interface Database {
           id: string
           user_id: string
           name: string
-          type: 'cash' | 'bank_account' | 'mobile_banking'
           balance: number
           created_at: string
           updated_at: string
@@ -41,7 +40,6 @@ export interface Database {
           id?: string
           user_id: string
           name: string
-          type: 'cash' | 'bank_account' | 'mobile_banking'
           balance?: number
           created_at?: string
           updated_at?: string
@@ -50,7 +48,6 @@ export interface Database {
           id?: string
           user_id?: string
           name?: string
-          type?: 'cash' | 'bank_account' | 'mobile_banking'
           balance?: number
           created_at?: string
           updated_at?: string
@@ -177,15 +174,21 @@ export type Liability = Database['public']['Tables']['liabilities']['Row']
 
 export type InsertProfile = Database['public']['Tables']['profiles']['Insert']
 export type InsertBalance = Database['public']['Tables']['balances']['Insert']
-export type InsertCategory = Database['public']['Tables']['categories']['Insert']
-export type InsertTransaction = Database['public']['Tables']['transactions']['Insert']
-export type InsertLiability = Database['public']['Tables']['liabilities']['Insert']
+export type InsertCategory =
+  Database['public']['Tables']['categories']['Insert']
+export type InsertTransaction =
+  Database['public']['Tables']['transactions']['Insert']
+export type InsertLiability =
+  Database['public']['Tables']['liabilities']['Insert']
 
 export type UpdateProfile = Database['public']['Tables']['profiles']['Update']
 export type UpdateBalance = Database['public']['Tables']['balances']['Update']
-export type UpdateCategory = Database['public']['Tables']['categories']['Update']
-export type UpdateTransaction = Database['public']['Tables']['transactions']['Update']
-export type UpdateLiability = Database['public']['Tables']['liabilities']['Update']
+export type UpdateCategory =
+  Database['public']['Tables']['categories']['Update']
+export type UpdateTransaction =
+  Database['public']['Tables']['transactions']['Update']
+export type UpdateLiability =
+  Database['public']['Tables']['liabilities']['Update']
 
 // Extended types for joined data
 export type TransactionWithDetails = Transaction & {
@@ -199,4 +202,6 @@ export type DashboardSummary = {
   totalBalance: number
   totalLiabilities: number
   recentTransactions: TransactionWithDetails[]
+  balances: Balance[]
+  totalBalances: number
 }
