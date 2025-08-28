@@ -4,13 +4,6 @@ import { createBalance } from '@/actions/management'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
@@ -21,9 +14,9 @@ export default function NewBalanceForm() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    
+
     const formDataObj = new FormData(event.currentTarget)
-    
+
     startTransition(async () => {
       try {
         await createBalance(formDataObj)
@@ -46,21 +39,6 @@ export default function NewBalanceForm() {
           placeholder="e.g., My Checking Account, Cash Wallet"
           required
         />
-      </div>
-
-      {/* Account Type */}
-      <div className="space-y-2">
-        <Label htmlFor="type">Account Type</Label>
-        <Select name="type" required>
-          <SelectTrigger>
-            <SelectValue placeholder="Select account type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="cash">Cash</SelectItem>
-            <SelectItem value="bank_account">Bank Account</SelectItem>
-            <SelectItem value="mobile_banking">Mobile Banking</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Initial Balance */}

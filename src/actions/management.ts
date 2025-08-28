@@ -17,13 +17,11 @@ export async function createBalance(formData: FormData) {
   }
 
   const name = formData.get('name') as string
-  const type = formData.get('type') as 'cash' | 'bank_account' | 'mobile_banking'
   const balance = parseFloat(formData.get('balance') as string) || 0
 
   const newBalance: InsertBalance = {
     user_id: user.id,
     name,
-    type,
     balance,
   }
 
