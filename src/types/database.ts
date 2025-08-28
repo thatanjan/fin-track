@@ -1,156 +1,147 @@
-export interface Database {
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.4"
+  }
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          id: string
-          email: string
-          full_name: string | null
-          avatar_url: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          email: string
-          full_name?: string | null
-          avatar_url?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          full_name?: string | null
-          avatar_url?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
       balances: {
         Row: {
+          balance: number | null
+          created_at: string | null
           id: string
-          user_id: string
           name: string
-          balance: number
-          created_at: string
-          updated_at: string
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
+          balance?: number | null
+          created_at?: string | null
           id?: string
-          user_id: string
           name: string
-          balance?: number
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
+          balance?: number | null
+          created_at?: string | null
           id?: string
-          user_id?: string
           name?: string
-          balance?: number
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
+          user_id?: string
         }
+        Relationships: []
       }
       categories: {
         Row: {
-          id: string
-          user_id: string
-          name: string
-          type: 'income' | 'expense'
           color: string | null
-          created_at: string
-          updated_at: string
+          created_at: string | null
+          id: string
+          name: string
+          type: string
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id: string
-          name: string
-          type: 'income' | 'expense'
           color?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at?: string | null
+          id?: string
+          name: string
+          type: string
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          name?: string
-          type?: 'income' | 'expense'
           color?: string | null
-          created_at?: string
-          updated_at?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
         }
+        Relationships: []
+      }
+      transaction_type: {
+        Row: {
+          created_at: string
+          id: number
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          type?: string
+        }
+        Relationships: []
       }
       transactions: {
         Row: {
-          id: string
-          user_id: string
+          amount: number
           balance_id: string
           category_id: string
-          amount: number
+          created_at: string | null
+          date: string | null
           description: string | null
-          type: 'income' | 'expense'
-          date: string
-          created_at: string
-          updated_at: string
+          id: string
+          type: string
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id: string
+          amount: number
           balance_id: string
           category_id: string
-          amount: number
+          created_at?: string | null
+          date?: string | null
           description?: string | null
-          type: 'income' | 'expense'
-          date?: string
-          created_at?: string
-          updated_at?: string
+          id?: string
+          type?: string
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          id?: string
-          user_id?: string
+          amount?: number
           balance_id?: string
           category_id?: string
-          amount?: number
+          created_at?: string | null
+          date?: string | null
           description?: string | null
-          type?: 'income' | 'expense'
-          date?: string
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      liabilities: {
-        Row: {
-          id: string
-          user_id: string
-          name: string
-          amount: number
-          description: string | null
-          due_date: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
           id?: string
-          user_id: string
-          name: string
-          amount: number
-          description?: string | null
-          due_date?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
+          type?: string
+          updated_at?: string | null
           user_id?: string
-          name?: string
-          amount?: number
-          description?: string | null
-          due_date?: string | null
-          created_at?: string
-          updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_balance_id_fkey"
+            columns: ["balance_id"]
+            isOneToOne: false
+            referencedRelation: "balances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -162,46 +153,131 @@ export interface Database {
     Enums: {
       [_ in never]: never
     }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
 
-// Type helpers
-export type Profile = Database['public']['Tables']['profiles']['Row']
-export type Balance = Database['public']['Tables']['balances']['Row']
-export type Category = Database['public']['Tables']['categories']['Row']
-export type Transaction = Database['public']['Tables']['transactions']['Row']
-export type Liability = Database['public']['Tables']['liabilities']['Row']
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-export type InsertProfile = Database['public']['Tables']['profiles']['Insert']
-export type InsertBalance = Database['public']['Tables']['balances']['Insert']
-export type InsertCategory =
-  Database['public']['Tables']['categories']['Insert']
-export type InsertTransaction =
-  Database['public']['Tables']['transactions']['Insert']
-export type InsertLiability =
-  Database['public']['Tables']['liabilities']['Insert']
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
-export type UpdateProfile = Database['public']['Tables']['profiles']['Update']
-export type UpdateBalance = Database['public']['Tables']['balances']['Update']
-export type UpdateCategory =
-  Database['public']['Tables']['categories']['Update']
-export type UpdateTransaction =
-  Database['public']['Tables']['transactions']['Update']
-export type UpdateLiability =
-  Database['public']['Tables']['liabilities']['Update']
-
-// Extended types for joined data
-export type TransactionWithDetails = Transaction & {
-  balance: Balance
-  category: Category
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export type DashboardSummary = {
-  totalIncome: number
-  totalExpenses: number
-  totalBalance: number
-  totalLiabilities: number
-  recentTransactions: TransactionWithDetails[]
-  balances: Balance[]
-  totalBalances: number
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
