@@ -110,6 +110,57 @@ export default async function Home() {
           </Card>
         </div>
 
+        {/* Quick Actions */}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+          <Card className='group cursor-pointer transition-all hover:shadow-md border-dashed border-2 hover:border-solid'>
+            <Link href='/transactions/new' className='block p-6'>
+              <CardContent className='flex flex-col items-center justify-center text-center space-y-4 p-0'>
+                <div className='w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors'>
+                  <div className='text-2xl'>💰</div>
+                </div>
+                <div>
+                  <h3 className='font-semibold text-lg'>Add Transaction</h3>
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    Record new income or expense
+                  </p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+
+          <Card className='group cursor-pointer transition-all hover:shadow-md border-dashed border-2 hover:border-solid'>
+            <Link href='/balances/new' className='block p-6'>
+              <CardContent className='flex flex-col items-center justify-center text-center space-y-4 p-0'>
+                <div className='w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-secondary/70 transition-colors'>
+                  <div className='text-2xl'>🏦</div>
+                </div>
+                <div>
+                  <h3 className='font-semibold text-lg'>Add Account</h3>
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    Create new balance account
+                  </p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+
+          <Card className='group cursor-pointer transition-all hover:shadow-md border-dashed border-2 hover:border-solid'>
+            <Link href='/categories/new' className='block p-6'>
+              <CardContent className='flex flex-col items-center justify-center text-center space-y-4 p-0'>
+                <div className='w-12 h-12 rounded-full bg-accent/50 flex items-center justify-center group-hover:bg-accent/70 transition-colors'>
+                  <div className='text-2xl'>📁</div>
+                </div>
+                <div>
+                  <h3 className='font-semibold text-lg'>Add Category</h3>
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    Organize transactions
+                  </p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+        </div>
+
         {/* Recent Transactions */}
         <Card>
           <CardHeader>
