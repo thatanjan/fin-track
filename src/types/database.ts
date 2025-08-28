@@ -204,4 +204,6 @@ export type DashboardSummary = {
   recentTransactions: TransactionWithDetails[]
   balances: Balance[]
   totalBalances: number
+  monthlyIncomeData: { month: string; amount: number }[]
+  monthlyExpenseData: { month: string; amount: number }[]
 }

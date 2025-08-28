@@ -78,6 +78,61 @@ export async function getDashboardData(): Promise<DashboardSummary> {
     .order('created_at', { ascending: false })
     .limit(3)
 
+  // Get monthly data for charts (last 6 months)
+  const sixMonthsAgo = new Date()
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5)
+  const startDate = sixMonthsAgo.toISOString().split('T')[0]
+
+  const { data: monthlyTransactions } = await supabase
+    .from('transactions')
+    .select('amount, type, date')
+    .eq('user_id', user.id)
+    .gte('date', startDate)
+    .order('date', { ascending: true })
+
+  // Process monthly data
+  const monthlyData: Record<string, { income: number; expense: number }> = {}
+  const months = []
+
+  // Generate last 6 months
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date()
+    date.setMonth(date.getMonth() - i)
+    const monthKey = date.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    })
+    months.push(monthKey)
+    monthlyData[monthKey] = { income: 0, expense: 0 }
+  }
+
+  // Aggregate transaction data by month
+  monthlyTransactions?.forEach((transaction) => {
+    const transactionDate = new Date(transaction.date)
+    const monthKey = transactionDate.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    })
+
+    if (monthlyData[monthKey]) {
+      if (transaction.type === 'income') {
+        monthlyData[monthKey].income += transaction.amount
+      } else {
+        monthlyData[monthKey].expense += transaction.amount
+      }
+    }
+  })
+
+  const monthlyIncomeData = months.map((month) => ({
+    month,
+    amount: monthlyData[month].income,
+  }))
+
+  const monthlyExpenseData = months.map((month) => ({
+    month,
+    amount: monthlyData[month].expense,
+  }))
+
   return {
     totalIncome,
     totalExpenses,
@@ -86,6 +141,8 @@ export async function getDashboardData(): Promise<DashboardSummary> {
     recentTransactions: (transactions as TransactionWithDetails[]) || [],
     balances: firstThreeBalances || [],
     totalBalances: balances?.length || 0,
+    monthlyIncomeData,
+    monthlyExpenseData,
   }
 }
 

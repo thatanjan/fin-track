@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { IncomeChart } from '@/components/charts/IncomeChart'
+import { ExpenseChart } from '@/components/charts/ExpenseChart'
 import SignOutButton from '@/features/auth/components/SignOutButton'
 import Link from 'next/link'
 
@@ -159,6 +161,12 @@ export default async function Home() {
               </CardContent>
             </Link>
           </Card>
+        </div>
+
+        {/* Monthly Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <IncomeChart data={dashboardData.monthlyIncomeData} />
+          <ExpenseChart data={dashboardData.monthlyExpenseData} />
         </div>
 
         {/* Recent Transactions */}
