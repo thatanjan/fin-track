@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import type { InsertBalance, InsertCategory } from '@/types/database'
+import type { InsertBalance, InsertCategory } from '@/types/app'
 
 export async function createBalance(formData: FormData) {
   const supabase = await createClient()

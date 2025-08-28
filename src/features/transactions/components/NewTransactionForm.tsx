@@ -11,21 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Balance, Category } from '@/types/app'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-
-interface Balance {
-  id: string
-  name: string
-  balance: number
-}
-
-interface Category {
-  id: string
-  name: string
-  type: 'income' | 'expense'
-}
 
 interface NewTransactionFormProps {
   balances: Balance[]
@@ -39,11 +28,11 @@ export default function NewTransactionForm({
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [selectedType, setSelectedType] = useState<'income' | 'expense' | ''>(
-    ''
+    '',
   )
 
-  const incomeCategories = categories.filter(cat => cat.type === 'income')
-  const expenseCategories = categories.filter(cat => cat.type === 'expense')
+  const incomeCategories = categories.filter((cat) => cat.type === 'income')
+  const expenseCategories = categories.filter((cat) => cat.type === 'expense')
 
   // Filter categories based on selected transaction type
   const filteredCategories =
@@ -69,64 +58,64 @@ export default function NewTransactionForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-6'>
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Transaction Type */}
-      <div className='space-y-2'>
-        <Label htmlFor='type'>Transaction Type</Label>
+      <div className="space-y-2">
+        <Label htmlFor="type">Transaction Type</Label>
         <Select
-          name='type'
+          name="type"
           required
           value={selectedType}
-          onValueChange={value =>
+          onValueChange={(value) =>
             setSelectedType(value as 'income' | 'expense')
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder='Select transaction type' />
+            <SelectValue placeholder="Select transaction type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='income'>Income</SelectItem>
-            <SelectItem value='expense'>Expense</SelectItem>
+            <SelectItem value="income">Income</SelectItem>
+            <SelectItem value="expense">Expense</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Amount */}
-      <div className='space-y-2'>
-        <Label htmlFor='amount'>Amount ($)</Label>
+      <div className="space-y-2">
+        <Label htmlFor="amount">Amount ($)</Label>
         <Input
-          id='amount'
-          name='amount'
-          type='number'
-          step='0.01'
-          min='0'
-          placeholder='0.00'
+          id="amount"
+          name="amount"
+          type="number"
+          step="0.01"
+          min="0"
+          placeholder="0.00"
           required
         />
       </div>
 
       {/* Description */}
-      <div className='space-y-2'>
-        <Label htmlFor='description'>Description</Label>
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
         <Input
-          id='description'
-          name='description'
-          type='text'
-          placeholder='Enter transaction description'
+          id="description"
+          name="description"
+          type="text"
+          placeholder="Enter transaction description"
         />
       </div>
 
       {/* Balance/Account */}
-      <div className='space-y-2'>
-        <Label htmlFor='balance_id'>Account</Label>
-        <Select name='balance_id' required>
+      <div className="space-y-2">
+        <Label htmlFor="balance_id">Account</Label>
+        <Select name="balance_id" required>
           <SelectTrigger>
-            <SelectValue placeholder='Select account' />
+            <SelectValue placeholder="Select account" />
           </SelectTrigger>
           <SelectContent>
-            {balances.map(balance => (
+            {balances.map((balance) => (
               <SelectItem key={balance.id} value={balance.id}>
-                {balance.name} (${balance.balance.toFixed(2)})
+                {balance.name} (${(balance.balance || 0).toFixed(2)})
               </SelectItem>
             ))}
           </SelectContent>
@@ -134,10 +123,10 @@ export default function NewTransactionForm({
       </div>
 
       {/* Category */}
-      <div className='space-y-2'>
-        <Label htmlFor='category_id'>Category</Label>
+      <div className="space-y-2">
+        <Label htmlFor="category_id">Category</Label>
         <Select
-          name='category_id'
+          name="category_id"
           required
           key={selectedType} // Reset select when type changes
         >
@@ -151,13 +140,13 @@ export default function NewTransactionForm({
             />
           </SelectTrigger>
           <SelectContent>
-            {filteredCategories.map(category => (
+            {filteredCategories.map((category) => (
               <SelectItem key={category.id} value={category.id}>
                 {category.name}
               </SelectItem>
             ))}
             {selectedType && filteredCategories.length === 0 && (
-              <SelectItem value='' disabled>
+              <SelectItem value="" disabled>
                 No {selectedType} categories found
               </SelectItem>
             )}
@@ -166,24 +155,24 @@ export default function NewTransactionForm({
       </div>
 
       {/* Date */}
-      <div className='space-y-2'>
-        <Label htmlFor='date'>Date</Label>
+      <div className="space-y-2">
+        <Label htmlFor="date">Date</Label>
         <Input
-          id='date'
-          name='date'
-          type='date'
+          id="date"
+          name="date"
+          type="date"
           defaultValue={new Date().toISOString().split('T')[0]}
           required
         />
       </div>
 
       {/* Submit Button */}
-      <div className='flex space-x-4'>
-        <Button type='submit' className='flex-1' loading={isPending}>
+      <div className="flex space-x-4">
+        <Button type="submit" className="flex-1" loading={isPending}>
           {isPending ? 'Adding Transaction...' : 'Add Transaction'}
         </Button>
-        <Button type='button' variant='outline' asChild>
-          <Link href='/'>Cancel</Link>
+        <Button type="button" variant="outline" asChild>
+          <Link href="/">Cancel</Link>
         </Button>
       </div>
     </form>

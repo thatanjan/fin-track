@@ -234,12 +234,16 @@ export default async function Home() {
                           </h4>
                           <span
                             className={`text-lg font-bold ${
-                              transaction.type === 'income'
+                              Array.isArray(transaction.transaction_type) &&
+                              transaction.transaction_type[0]?.type === 'income'
                                 ? 'text-green-600'
                                 : 'text-red-600'
                             }`}
                           >
-                            {transaction.type === 'income' ? '+' : '-'}
+                            {Array.isArray(transaction.transaction_type) &&
+                            transaction.transaction_type[0]?.type === 'income'
+                              ? '+'
+                              : '-'}
                             {formatCurrency(transaction.amount)}
                           </span>
                         </div>
@@ -248,7 +252,11 @@ export default async function Home() {
                           <span className="mx-2">•</span>
                           <span>{transaction.balance.name}</span>
                           <span className="mx-2">•</span>
-                          <span>{formatDate(transaction.date)}</span>
+                          <span>
+                            {formatDate(
+                              transaction.date || new Date().toISOString(),
+                            )}
+                          </span>
                         </div>
                       </div>
                     </div>
